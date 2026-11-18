@@ -3,81 +3,101 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#123b36">
+<meta name="theme-color" content="#163d39">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SafeHarbor">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<title>SafeHarbor | Offline Shelter Finder</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<title>SafeHarbor | Emergency Shelter Directory</title>
 <style>
-:root{--ink:#17332f;--muted:#5c716d;--bg:#f3f7f5;--card:#fff;--green:#176b58;--pale:#e3f2ec;--line:#d8e4df;--amber:#fff2d6}
-*{box-sizing:border-box}body{margin:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
-header{background:#123b36;color:white;padding:22px max(18px,calc((100vw - 900px)/2));}
-header .brand{font-size:1.45rem;font-weight:800;letter-spacing:.2px}header p{margin:4px 0 0;color:#d7e9e2}
-main{max-width:900px;margin:22px auto;padding:0 16px 50px}
-.status{display:flex;gap:9px;align-items:center;background:var(--pale);border:1px solid #c4e2d4;padding:12px 14px;border-radius:13px;font-weight:650;margin-bottom:16px}
-.dot{width:10px;height:10px;border-radius:50%;background:#16835e;display:inline-block}
-.warning{background:var(--amber);border:1px solid #f0d79d;padding:12px 14px;border-radius:12px;margin:14px 0;color:#65480e}
-.panel,.shelter{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 3px 12px #17332f08}
-h1{font-size:1.45rem;margin:0 0 8px}h2{font-size:1.1rem;margin:0 0 10px}
-.muted{color:var(--muted);font-size:.92rem}
-button{border:0;border-radius:11px;padding:12px 16px;font-weight:750;font-size:.96rem;cursor:pointer}
-.primary{background:var(--green);color:white}.secondary{background:var(--pale);color:var(--green);border:1px solid #c4e2d4}
-button:focus-visible,input:focus-visible{outline:3px solid #e3a52c;outline-offset:2px}
+:root{color-scheme:light;--ink:#183631;--muted:#60736e;--bg:#f3f6f4;--card:#fff;--green:#176b58;--green2:#0f5144;--pale:#e5f1ec;--line:#d9e3de;--amber:#fff4dc;--amber-ink:#72500c;--red:#fff0ee;--red-ink:#8b3027;--shadow:0 8px 24px #1836310d}
+:root[data-theme="dark"]{color-scheme:dark;--ink:#e8f1ed;--muted:#a9bbb4;--bg:#111c1a;--card:#1b2a26;--green:#62c3a1;--green2:#8ad9ba;--pale:#233d34;--line:#344a42;--amber:#44371f;--amber-ink:#ffdc8c;--red:#432b29;--red-ink:#ffb5aa;--shadow:0 8px 24px #0003}
+*{box-sizing:border-box}body{margin:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;transition:background .2s,color .2s}
+header{background:linear-gradient(120deg,#123b36,#246b58);color:white;padding:23px max(18px,calc((100vw - 980px)/2));box-shadow:0 4px 18px #123b3622}
+header .brand{font-size:1.5rem;font-weight:850;letter-spacing:.2px}header p{margin:4px 0 0;color:#d9eee5}
+main{max-width:980px;margin:22px auto;padding:0 16px 50px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.status{display:flex;gap:9px;align-items:center;background:var(--pale);border:1px solid var(--line);padding:10px 13px;border-radius:13px;font-weight:650}.dot{width:9px;height:9px;border-radius:50%;background:#2ca879;display:inline-block}
+.panel,.shelter{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
+h1{font-size:1.45rem;margin:0 0 8px}h2{font-size:1.12rem;margin:0 0 10px}h3{margin:0 0 5px;font-size:1.06rem}.muted{color:var(--muted);font-size:.92rem}
+button,select{border:1px solid var(--line);border-radius:11px;padding:11px 14px;font:inherit;font-weight:700;cursor:pointer;background:var(--card);color:var(--ink)}
+.primary{background:var(--green);color:#fff;border-color:var(--green)}.secondary{background:var(--pale);color:var(--green2);border-color:var(--line)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e3a52c;outline-offset:2px}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.space{justify-content:space-between}
 input[type=checkbox]{width:19px;height:19px;accent-color:var(--green);vertical-align:middle}
-input[type=search]{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit;margin:8px 0}
-.shelter{cursor:pointer;transition:.15s}.shelter:hover{border-color:#7bb6a1;transform:translateY(-1px)}
-.shelter h3{margin:0 0 4px;font-size:1.05rem}.tag{display:inline-block;border-radius:20px;background:var(--pale);color:#145744;padding:3px 9px;font-size:.78rem;font-weight:700;margin:5px 5px 0 0}
-.tag.no{background:#f2eeee;color:#654b4b}.date{font-size:.85rem;color:var(--muted)}
-.hidden{display:none!important}.back{margin-bottom:12px}.bigdate{font-weight:750}.footer{font-size:.82rem;color:var(--muted);text-align:center;margin-top:24px}
-@media(min-width:650px){.grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}.grid .shelter{margin:8px 0}}
+input[type=search],input[type=text]{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;font:inherit;margin:7px 0;background:var(--card);color:var(--ink)}
+.searchgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tag{display:inline-block;border-radius:20px;background:var(--pale);color:var(--green2);padding:4px 9px;font-size:.77rem;font-weight:750;margin:5px 5px 0 0}.tag.no{background:var(--red);color:var(--red-ink)}
+.date{font-size:.84rem;color:var(--muted)}.warning{background:var(--amber);border:1px solid var(--line);padding:12px 14px;border-radius:13px;margin:14px 0;color:var(--amber-ink)}.danger{background:var(--red);color:var(--red-ink)}
+.shelter{cursor:pointer;transition:.15s}.shelter:hover{border-color:var(--green);transform:translateY(-1px)}
+.hidden{display:none!important}.back{margin-bottom:12px}.bigdate{font-weight:800}.footer{font-size:.82rem;color:var(--muted);text-align:center;margin-top:25px}
+#map{height:340px;border-radius:13px;border:1px solid var(--line);z-index:1}.mapnote{margin-top:9px}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.toolbar select{padding:9px 11px}
+.accessgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.accessitem{background:var(--bg);border:1px solid var(--line);padding:9px 10px;border-radius:10px;font-size:.9rem}
+@media(max-width:560px){.searchgrid,.accessgrid{grid-template-columns:1fr}#map{height:290px}}
+@media(min-width:700px){.grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}.grid .shelter{margin:8px 0}}
 </style>
 </head>
 <body>
 <header><div class="brand">⛑ SafeHarbor</div><p>Emergency shelter information, saved before you need it.</p></header>
 <main>
-<div class="status"><span class="dot"></span><span id="savedLabel">Viewing sample directory · Not yet saved to this device</span></div>
-<div class="warning"><strong>Important:</strong> This is a fictional classroom prototype. In a real emergency, shelter availability can change. Verify current instructions with local emergency officials when possible. A saved listing does not confirm that a shelter is open.</div>
+<div class="topbar"><div class="status"><span class="dot"></span><span id="savedLabel">Viewing sample directory · Not yet saved to this device</span></div><div class="toolbar"><label class="muted" for="themeSelect">Appearance</label><select id="themeSelect" aria-label="Color theme"><option value="light">Light mode</option><option value="dark">Dark mode</option><option value="system">Use device setting</option></select></div></div>
+<div class="warning"><strong>Prototype notice:</strong> This is a fictional classroom directory. Listings, accessibility details and mapped locations are sample data, not verified emergency resources. Always confirm shelter availability and instructions with local emergency officials. A saved listing does not mean a shelter is open.</div>
+<div id="staleBanner" class="warning danger hidden" role="status" aria-live="polite"></div>
+<div id="updateBanner" class="warning hidden" role="status" aria-live="polite"></div>
 <section id="home" class="panel">
 <h1>Prepare your shelter directory</h1>
-<p class="muted">Save this community directory on this device so the listings can be reopened when you are offline.</p>
-<div class="row"><button class="primary" id="downloadBtn">↓ Download directory</button><span id="downloadStatus" class="muted" aria-live="polite"></span></div>
+<p class="muted">Save the current directory on this device so listings can be reopened when offline.</p>
+<div class="row"><button class="primary" id="downloadBtn">↓ Save directory to this device</button><span id="downloadStatus" class="muted" aria-live="polite"></span></div>
 <p class="date" id="downloadDate">Directory download date: Not downloaded yet</p>
+<div class="row space"><span class="muted">Directory version <strong id="versionLabel">1.1.0</strong></span><span class="muted" id="savedVersion"></span></div>
+</section>
+<section class="panel">
+<div class="row space"><h2>Shelter location map</h2><span class="muted" id="mapCount">Loading map…</span></div>
+<div id="map" role="region" aria-label="Map of shelter locations"></div>
+<p class="muted mapnote" id="mapNote">Map pins are placed using address lookup while online. Map tiles and address lookup require an internet connection; the directory itself remains available offline.</p>
 </section>
 <section id="listView">
 <div class="row space"><h2>Community shelters</h2><span class="muted" id="count"></span></div>
-<label><input type="checkbox" id="accessibleOnly"> Show wheelchair-accessible shelters only</label>
-<input type="search" id="search" placeholder="Search shelter name or address" aria-label="Search shelters">
+<div class="searchgrid">
+<div><label class="muted" for="search">Search name, street or ZIP code</label><input type="search" id="search" placeholder="e.g. 97330 or community center" aria-label="Search shelter name, address or ZIP code"></div>
+<div><label class="muted" for="neighborhoodSearch">Search neighborhood</label><input type="search" id="neighborhoodSearch" placeholder="Enter neighborhood" aria-label="Search by neighborhood"></div>
+</div>
+<div class="row space"><label><input type="checkbox" id="accessibleOnly"> Wheelchair-accessible only</label><label class="muted" for="sortSelect">Sort</label><select id="sortSelect"><option value="name">Name</option><option value="recent">Recently updated</option></select></div>
 <div id="shelterList" class="grid"></div>
 </section>
-<section id="detailView" class="panel hidden">
-<button class="secondary back" id="backBtn">← Back to directory</button>
-<div id="detailContent"></div>
-</section>
-<div class="footer">Prototype directory · Sample community · Always check official emergency guidance.</div>
+<section id="detailView" class="panel hidden"><button class="secondary back" id="backBtn">← Back to directory</button><div id="detailContent"></div></section>
+<div class="footer">SafeHarbor prototype · Directory v1.1.0 · Sample community · Always check official emergency guidance.</div>
 </main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
-const SAMPLE = [
-{id:"s1",name:"Corvallis Community Center",address:"2601 NW Tyler Ave, Corvallis, OR 97330",accessible:true,notes:"Step-free entrance; accessible restroom listed in this fictional sample.",updated:"2026-11-10"},
-{id:"s2",name:"Riverside Emergency Shelter",address:"1450 Riverbend Rd, Corvallis, OR 97333",accessible:true,notes:"Wheelchair-accessible entrance and designated accessible spaces in this fictional sample.",updated:"2026-11-12"},
-{id:"s3",name:"Oak Grove High School",address:"880 Oak Grove Dr, Corvallis, OR 97330",accessible:false,notes:"Accessibility not confirmed in this fictional sample.",updated:"2026-11-08"},
-{id:"s4",name:"Benton County Fairgrounds",address:"110 SW 53rd St, Corvallis, OR 97333",accessible:true,notes:"Accessible route to main hall listed in this fictional sample.",updated:"2026-11-14"},
-{id:"s5",name:"Mountain View Recreation Hall",address:"725 NW Highland Dr, Corvallis, OR 97330",accessible:false,notes:"Accessibility not confirmed in this fictional sample.",updated:"2026-11-06"}
+const APP_VERSION="1.1.0", DIRECTORY_VERSION="1.1.0", STALE_DAYS=30;
+const SAMPLE=[
+{id:"s1",name:"Corvallis Community Center",address:"2601 NW Tyler Ave, Corvallis, OR 97330",zip:"97330",neighborhood:"",wheelchair:true,stepFree:true,accessibleRestroom:true,accessibleParking:null,serviceAnimals:null,communicationSupport:null,notes:"Step-free entrance; accessible restroom listed in this fictional sample.",updated:"2026-11-10"},
+{id:"s2",name:"Riverside Emergency Shelter",address:"1450 Riverbend Rd, Corvallis, OR 97333",zip:"97333",neighborhood:"",wheelchair:true,stepFree:true,accessibleRestroom:null,accessibleParking:true,serviceAnimals:null,communicationSupport:null,notes:"Wheelchair-accessible entrance and designated accessible spaces in this fictional sample.",updated:"2026-11-12"},
+{id:"s3",name:"Oak Grove High School",address:"880 Oak Grove Dr, Corvallis, OR 97330",zip:"97330",neighborhood:"Oak Grove (sample)",wheelchair:false,stepFree:null,accessibleRestroom:null,accessibleParking:null,serviceAnimals:null,communicationSupport:null,notes:"Accessibility not confirmed in this fictional sample.",updated:"2026-11-08"},
+{id:"s4",name:"Benton County Fairgrounds",address:"110 SW 53rd St, Corvallis, OR 97333",zip:"97333",neighborhood:"",wheelchair:true,stepFree:true,accessibleRestroom:null,accessibleParking:true,serviceAnimals:null,communicationSupport:null,notes:"Accessible route to main hall listed in this fictional sample.",updated:"2026-11-14"},
+{id:"s5",name:"Mountain View Recreation Hall",address:"725 NW Highland Dr, Corvallis, OR 97330",zip:"97330",neighborhood:"Mountain View (sample)",wheelchair:false,stepFree:null,accessibleRestroom:null,accessibleParking:null,serviceAnimals:null,communicationSupport:null,notes:"Accessibility not confirmed in this fictional sample.",updated:"2026-11-06"}
 ];
-const KEY="safeharbor-directory-v1";
-let directory=SAMPLE, downloadedAt=null;
+const KEY="safeharbor-directory-v2", THEME_KEY="safeharbor-theme";
+let directory=SAMPLE,downloadedAt=null,savedDirectoryVersion=null,map=null,markers={};
 const $=id=>document.getElementById(id);
-function loadSaved(){try{const x=JSON.parse(localStorage.getItem(KEY));if(x&&Array.isArray(x.items)){directory=x.items;downloadedAt=x.downloadedAt;}}catch(e){}}
-function updateStatus(){if(downloadedAt){$("savedLabel").textContent="Viewing saved information · Stored on this device";$("downloadDate").textContent="Directory downloaded to this device: "+new Date(downloadedAt).toLocaleString();}else{$("savedLabel").textContent="Viewing sample directory · Not yet saved to this device";$("downloadDate").textContent="Directory download date: Not downloaded yet";}}
-function render(){const term=$("search").value.toLowerCase();const only=$("accessibleOnly").checked;const items=directory.filter(s=>(!only||s.accessible)&&(s.name+" "+s.address).toLowerCase().includes(term));$("count").textContent=items.length+" shown";$("shelterList").innerHTML=items.map(s=>`<article class="shelter" tabindex="0" role="button" aria-label="View ${s.name}" data-id="${s.id}"><h3>${esc(s.name)}</h3><div class="muted">${esc(s.address)}</div><span class="tag ${s.accessible?"":"no"}">${s.accessible?"♿ Wheelchair accessible":"Accessibility not confirmed"}</span><div class="date">Listing updated: ${esc(s.updated)}</div></article>`).join("")||'<p class="muted">No shelters match your filters.</p>';document.querySelectorAll(".shelter").forEach(el=>{el.addEventListener("click",()=>showDetail(el.dataset.id));el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showDetail(el.dataset.id)}})});}
-function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function showDetail(id){const s=directory.find(x=>x.id===id);if(!s)return;$("listView").classList.add("hidden");$("detailView").classList.remove("hidden");$("detailContent").innerHTML=`<h1>${esc(s.name)}</h1><p>${esc(s.address)}</p><p><span class="tag ${s.accessible?"":"no"}">${s.accessible?"♿ Wheelchair accessible":"Accessibility not confirmed"}</span></p><h2>Accessibility information</h2><p>${esc(s.notes)}</p><div class="panel"><div class="muted">This shelter listing was last updated</div><div class="bigdate">${esc(s.updated)}</div></div><p class="muted">Directory downloaded: ${downloadedAt?new Date(downloadedAt).toLocaleString():"Not downloaded yet"}</p>`;window.scrollTo(0,0);}
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function loadSaved(){try{let x=JSON.parse(localStorage.getItem(KEY));if(!x){const legacy=JSON.parse(localStorage.getItem("safeharbor-directory-v1"));if(legacy&&Array.isArray(legacy.items)){x={...legacy,directoryVersion:"1.0.0",items:legacy.items.map(s=>({...s,zip:s.zip||((String(s.address||"").match(/\b\d{5}\b/)||[])[0]||""),neighborhood:s.neighborhood||"",wheelchair:typeof s.wheelchair==="boolean"?s.wheelchair:!!s.accessible,stepFree:null,accessibleRestroom:null,accessibleParking:null,serviceAnimals:null,communicationSupport:null}))};}}if(x&&Array.isArray(x.items)){directory=x.items;downloadedAt=x.downloadedAt;savedDirectoryVersion=x.directoryVersion||"1.0.0";}}catch(e){}}
+function updateStatus(){if(downloadedAt){$("savedLabel").textContent="Viewing saved information · Stored on this device";$("downloadDate").textContent="Directory saved: "+new Date(downloadedAt).toLocaleString();$("savedVersion").textContent="Saved version: "+savedDirectoryVersion;}else{$("savedLabel").textContent="Viewing sample directory · Not yet saved to this device";$("downloadDate").textContent="Directory download date: Not downloaded yet";$("savedVersion").textContent="";}checkFreshness();checkVersion();}
+function checkFreshness(){const dates=directory.map(s=>new Date(s.updated+"T00:00:00")).filter(d=>!isNaN(d));const oldest=dates.length?new Date(Math.min(...dates.map(d=>d.getTime()))):null;const stale=oldest&&((Date.now()-oldest.getTime())/86400000>STALE_DAYS);const banner=$("staleBanner");if(stale){banner.classList.remove("hidden");banner.innerHTML="<strong>Outdated-information warning:</strong> At least one listing is more than "+STALE_DAYS+" days old (oldest shown: "+oldest.toLocaleDateString()+"). Verify details before traveling. This warning does not confirm current shelter status.";}else{banner.classList.add("hidden");}}
+function checkVersion(){const b=$("updateBanner");if(savedDirectoryVersion&&savedDirectoryVersion!==DIRECTORY_VERSION){b.classList.remove("hidden");b.innerHTML="<strong>Directory update available:</strong> This device has version "+esc(savedDirectoryVersion)+"; the current directory is version "+DIRECTORY_VERSION+". Save the directory again to update your offline copy.";}else b.classList.add("hidden");}
+function accessLabel(v){return v===true?"Yes":v===false?"No":"Not confirmed";}
+function render(){const term=$("search").value.trim().toLowerCase(),hood=$("neighborhoodSearch").value.trim().toLowerCase(),only=$("accessibleOnly").checked;let items=directory.filter(s=>(!only||s.wheelchair===true)&&(!term||(s.name+" "+s.address+" "+(s.zip||"")).toLowerCase().includes(term))&&(!hood||(s.neighborhood||"").toLowerCase().includes(hood)));if($("sortSelect").value==="recent")items.sort((a,b)=>b.updated.localeCompare(a.updated));else items.sort((a,b)=>a.name.localeCompare(b.name));$("count").textContent=items.length+" shown";$("shelterList").innerHTML=items.map(s=>`<article class="shelter" tabindex="0" role="button" aria-label="View ${esc(s.name)}" data-id="${esc(s.id)}"><h3>${esc(s.name)}</h3><div class="muted">${esc(s.address)}</div><span class="tag ${s.wheelchair===true?"":"no"}">${s.wheelchair===true?"♿ Wheelchair accessible":s.wheelchair===false?"Not wheelchair accessible":"Wheelchair access not confirmed"}</span><div class="date">Updated: ${esc(s.updated)} · ZIP ${esc(s.zip||"Not listed")}</div></article>`).join("")||'<p class="muted">No shelters match your filters.</p>';document.querySelectorAll(".shelter").forEach(el=>{el.addEventListener("click",()=>showDetail(el.dataset.id));el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showDetail(el.dataset.id)}})});}
+function showDetail(id){const s=directory.find(x=>x.id===id);if(!s)return;$("listView").classList.add("hidden");$("detailView").classList.remove("hidden");const fields=[["Wheelchair access",s.wheelchair],["Step-free entrance",s.stepFree],["Accessible restroom",s.accessibleRestroom],["Accessible parking",s.accessibleParking],["Service-animal accommodation",s.serviceAnimals],["Communication support (e.g. visual / hearing)",s.communicationSupport]];$("detailContent").innerHTML=`<h1>${esc(s.name)}</h1><p>${esc(s.address)}</p><p><span class="tag">${esc(s.neighborhood||"Neighborhood not specified")}</span><span class="tag">ZIP ${esc(s.zip||"Not listed")}</span></p><h2>Accessibility information</h2><div class="accessgrid">${fields.map(([label,value])=>`<div class="accessitem"><strong>${esc(label)}</strong><br>${accessLabel(value)}</div>`).join("")}</div><p>${esc(s.notes||"No additional notes supplied.")}</p><div class="panel"><div class="muted">Listing last updated</div><div class="bigdate">${esc(s.updated)}</div></div><p class="muted">Directory version ${DIRECTORY_VERSION}. Saved copy: ${downloadedAt?new Date(downloadedAt).toLocaleString():"Not downloaded"}.</p><a target="_blank" rel="noopener" href="https://www.openstreetmap.org/search?query=${encodeURIComponent(s.address)}">Find this address on OpenStreetMap ↗</a>`;window.scrollTo(0,0);}
 $("backBtn").onclick=()=>{$("detailView").classList.add("hidden");$("listView").classList.remove("hidden");};
-$("downloadBtn").onclick=()=>{downloadedAt=new Date().toISOString();try{localStorage.setItem(KEY,JSON.stringify({items:directory,downloadedAt}));$("downloadStatus").textContent="Saved on this device.";updateStatus();}catch(e){$("downloadStatus").textContent="Could not save. Check device storage settings.";downloadedAt=null;}};
-$("search").addEventListener("input",render);$("accessibleOnly").addEventListener("change",render);
-loadSaved();updateStatus();render();
-if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost")){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
+$("downloadBtn").onclick=()=>{downloadedAt=new Date().toISOString();savedDirectoryVersion=DIRECTORY_VERSION;try{localStorage.setItem(KEY,JSON.stringify({items:directory,downloadedAt,directoryVersion:DIRECTORY_VERSION}));$("downloadStatus").textContent="Saved on this device.";updateStatus();}catch(e){$("downloadStatus").textContent="Could not save. Check device storage settings.";downloadedAt=null;}};
+["search","neighborhoodSearch"].forEach(id=>$(id).addEventListener("input",render));$("accessibleOnly").addEventListener("change",render);$("sortSelect").addEventListener("change",render);
+function setTheme(value){const actual=value==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):value;document.documentElement.dataset.theme=actual;document.querySelector('meta[name="theme-color"]').content=actual==="dark"?"#111c1a":"#163d39";$("themeSelect").value=value;try{localStorage.setItem(THEME_KEY,value)}catch(e){}}
+$("themeSelect").addEventListener("change",e=>setTheme(e.target.value));let savedTheme="system";try{savedTheme=localStorage.getItem(THEME_KEY)||"system"}catch(e){}setTheme(savedTheme);
+function initMap(){if(!window.L){$("mapCount").textContent="Map library unavailable";$("mapNote").textContent="The interactive map needs an internet connection. Use the address links in each shelter detail.";return;}map=L.map("map").setView([44.5646,-123.2620],12);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);plotMarkers();}
+async function plotMarkers(){if(!map)return;let placed=0;for(const s of directory){try{if(placed>0)await new Promise(resolve=>setTimeout(resolve,1100));const q=encodeURIComponent(s.address);const response=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+q,{headers:{"Accept":"application/json"}});if(!response.ok)continue;const results=await response.json();if(!results.length)continue;const p=results[0],marker=L.marker([Number(p.lat),Number(p.lon)]).addTo(map).bindPopup("<strong>"+esc(s.name)+"</strong><br>"+esc(s.address)+"<br><small>Sample listing — verify before use</small>");markers[s.id]=marker;placed++;}catch(e){}}$("mapCount").textContent=placed+" of "+directory.length+" mapped";if(placed){const group=L.featureGroup(Object.values(markers));map.fitBounds(group.getBounds().pad(.18));$("mapNote").textContent="Pins are based on online address lookup and may be inaccurate because this is fictional sample data. Map requires internet access.";}else{$("mapNote").textContent="Could not look up addresses. Check your connection or use the address links in shelter details.";}}
+loadSaved();updateStatus();render();initMap();
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
 </script>
 </body></html>

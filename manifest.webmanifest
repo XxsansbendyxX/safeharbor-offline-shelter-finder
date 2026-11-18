@@ -5,9 +5,9 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f3f7f5",
-  "theme_color": "#123b36",
-  "description": "A sample offline shelter directory prototype.",
+  "background_color": "#f3f6f4",
+  "theme_color": "#163d39",
+  "description": "Installable emergency shelter directory prototype with accessibility filters and offline saved listings.",
   "icons": [
     {
       "src": "./icons/icon-192.png",

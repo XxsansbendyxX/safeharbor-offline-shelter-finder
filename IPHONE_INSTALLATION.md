@@ -1,25 +1,30 @@
 # Install SafeHarbor on an iPhone
 
 ## Before you start
-The app must be hosted at an HTTPS address. The service worker that makes the app shell available offline does not work from an ordinary `file://` link. A school-approved static host is suitable for a class prototype.
+SafeHarbor is an installable web app (PWA), not a native App Store app. Host the folder at an HTTPS address. The offline app shell and saved directory work after the first online visit; the interactive map uses OpenStreetMap tiles and online address lookup, so the map itself requires internet access.
 
 ## Add it to the iPhone Home Screen
-1. Open the hosted SafeHarbor URL in **Safari** on the iPhone.
-2. While online, wait for the page to finish loading.
-3. Tap the **Share** button (square with an upward arrow).
-4. Choose **Add to Home Screen**. If shown, enable **Open as Web App**.
-5. Tap **Add**. SafeHarbor should appear as an icon on the Home Screen.
-6. Open SafeHarbor from that Home Screen icon while still online.
-7. Tap **Download directory** and confirm the page says the information is saved on this device.
-8. Close SafeHarbor, enable Airplane Mode, and make sure Wi-Fi is off.
-9. Reopen SafeHarbor from its Home Screen icon and test the accessibility filter and shelter details.
+1. Open the hosted SafeHarbor URL in Safari on the iPhone.
+2. Wait for the page to finish loading while online.
+3. Tap Share, then choose Add to Home Screen. If shown, enable Open as Web App.
+4. Tap Add and open SafeHarbor from the Home Screen icon.
+5. Tap **Save directory to this device** while online.
+6. Test search by ZIP code and neighborhood, accessibility details, and light/dark mode.
+7. To test offline use, close SafeHarbor, enable Airplane Mode and turn Wi-Fi off, then reopen it. The saved directory should remain available; the online map will not.
 
-## Important iPhone notes
-- Use Safari for installation; other browsers may not offer the same Home Screen web-app installation flow.
-- Keep using the same Home Screen app and browser profile where the directory was saved.
-- Do not clear Safari website data or delete the Home Screen app before the test; doing so may remove saved information.
-- Test offline behavior on the actual iPhone model and iOS version your team will demonstrate.
-- The current app uses browser local storage for the sample directory. A production version should use stronger offline storage, signed/versioned data packages, and a carefully tested update mechanism.
+## Features in this version
+- Shelter map with address-based pins when online (sample locations only).
+- Automatic warning when any listing is more than 30 days old.
+- Detailed accessibility fields, including step-free access, restrooms, parking, service animals and communication support.
+- Light, dark and device-default appearance settings.
+- Directory version 1.1.0 and a notice when a saved directory version differs.
+- Search by shelter name, street address, ZIP code or neighborhood.
+
+## Important data note
+The included shelter listings are fictional classroom sample data. Accessibility values marked "Not confirmed" must not be treated as a denial of access or as proof of access. The app does not connect to an official live shelter feed, and saving a listing does not verify availability. Before real-world use, replace sample entries with verified information from authorized local sources and confirm that update dates and accessibility details are maintained.
+
+## Map and privacy
+The map uses OpenStreetMap and Nominatim address search while online. Address queries are sent to that external service to place map pins. The map may fail offline, if the service is unavailable, or if an address cannot be located. Verify every pin before relying on it.
 
 ## This is not an App Store app
-This package creates an installable Home Screen web app (PWA), not a signed native iOS `.ipa`. Publishing a native app through the App Store requires an Apple developer workflow, signing, review, and ongoing maintenance.
+Publishing a native app through the App Store requires a separate Apple developer workflow, signing, review and maintenance.
