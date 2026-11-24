@@ -3,43 +3,42 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#163d39">
+<meta name="theme-color" content="#d3d1eb">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SafeHarbor">
+<meta name="apple-mobile-web-app-title" content="SafeOff">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-<title>SafeHarbor | Emergency Shelter Directory</title>
+<title>SafeOff | Emergency Shelter Directory</title>
 <style>
-:root{color-scheme:light;--ink:#183631;--muted:#60736e;--bg:#f3f6f4;--card:#fff;--green:#176b58;--green2:#0f5144;--pale:#e5f1ec;--line:#d9e3de;--amber:#fff4dc;--amber-ink:#72500c;--red:#fff0ee;--red-ink:#8b3027;--shadow:0 8px 24px #1836310d}
-:root[data-theme="dark"]{color-scheme:dark;--ink:#e8f1ed;--muted:#a9bbb4;--bg:#111c1a;--card:#1b2a26;--green:#62c3a1;--green2:#8ad9ba;--pale:#233d34;--line:#344a42;--amber:#44371f;--amber-ink:#ffdc8c;--red:#432b29;--red-ink:#ffb5aa;--shadow:0 8px 24px #0003}
-*{box-sizing:border-box}body{margin:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;transition:background .2s,color .2s}
-header{background:linear-gradient(120deg,#123b36,#246b58);color:white;padding:23px max(18px,calc((100vw - 980px)/2));box-shadow:0 4px 18px #123b3622}
-header .brand{font-size:1.5rem;font-weight:850;letter-spacing:.2px}header p{margin:4px 0 0;color:#d9eee5}
-main{max-width:980px;margin:22px auto;padding:0 16px 50px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-.status{display:flex;gap:9px;align-items:center;background:var(--pale);border:1px solid var(--line);padding:10px 13px;border-radius:13px;font-weight:650}.dot{width:9px;height:9px;border-radius:50%;background:#2ca879;display:inline-block}
-.panel,.shelter{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
-h1{font-size:1.45rem;margin:0 0 8px}h2{font-size:1.12rem;margin:0 0 10px}h3{margin:0 0 5px;font-size:1.06rem}.muted{color:var(--muted);font-size:.92rem}
-button,select{border:1px solid var(--line);border-radius:11px;padding:11px 14px;font:inherit;font-weight:700;cursor:pointer;background:var(--card);color:var(--ink)}
+:root{color-scheme:light;--ink:#50395f;--muted:#766b86;--bg:#d4d2eb;--card:#fff;--green:#766b9f;--green2:#514068;--pale:#eeecf8;--line:#d7d1e8;--amber:#fff4dc;--amber-ink:#72500c;--red:#fff0ee;--red-ink:#8b3027;--shadow:0 10px 28px #45365d16}
+:root[data-theme="dark"]{color-scheme:dark;--ink:#f0ebf8;--muted:#c0b5d1;--bg:#211c2d;--card:#30283e;--green:#b6a9dc;--green2:#e0d7f4;--pale:#403650;--line:#514660;--amber:#44371f;--amber-ink:#ffdc8c;--red:#432b29;--red-ink:#ffb5aa;--shadow:0 10px 28px #0004}
+*{box-sizing:border-box}body{margin:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;transition:background .2s,color .2s}
+header{background:linear-gradient(120deg,#4d385f,#756a9e);color:white;padding:25px max(18px,calc((100vw - 980px)/2));box-shadow:0 8px 24px #45365d25;position:relative;overflow:hidden}header:after{content:"";position:absolute;width:240px;height:240px;border:1px solid #ffffff26;border-radius:50%;right:-75px;top:-145px;box-shadow:0 0 0 22px #ffffff0b,0 0 0 46px #ffffff08}.brand{font-size:1.65rem;font-weight:850;letter-spacing:.15px;display:flex;align-items:center;gap:11px}.brandmark{display:inline-grid;place-items:center;width:38px;height:38px;border:2px solid #ffffffb8;border-radius:13px;background:#ffffff20;font-size:1.2rem;font-weight:900}header p{margin:5px 0 0 49px;color:#e9e3f2}
+main{max-width:980px;margin:24px auto;padding:0 18px 50px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.status{display:flex;gap:9px;align-items:center;background:var(--pale);border:1px solid var(--line);padding:10px 14px;border-radius:14px;font-weight:650}.dot{width:9px;height:9px;border-radius:50%;background:#6aab91;display:inline-block}
+.panel,.shelter{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:20px;margin:16px 0;box-shadow:var(--shadow)}
+h1{font-size:1.5rem;margin:0 0 8px;letter-spacing:-.025em}h2{font-size:1.15rem;margin:0 0 12px}h3{margin:0 0 7px;font-size:1.08rem;line-height:1.35}.muted{color:var(--muted);font-size:.92rem}
+button,select{border:1px solid var(--line);border-radius:12px;padding:11px 15px;font:inherit;font-weight:700;cursor:pointer;background:var(--card);color:var(--ink);transition:transform .15s,box-shadow .15s,border-color .15s}button:hover{transform:translateY(-1px);box-shadow:0 5px 14px #45365d18}
 .primary{background:var(--green);color:#fff;border-color:var(--green)}.secondary{background:var(--pale);color:var(--green2);border-color:var(--line)}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e3a52c;outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #9b8ac5;outline-offset:2px}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.space{justify-content:space-between}
 input[type=checkbox]{width:19px;height:19px;accent-color:var(--green);vertical-align:middle}
-input[type=search],input[type=text]{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;font:inherit;margin:7px 0;background:var(--card);color:var(--ink)}
-.searchgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tag{display:inline-block;border-radius:20px;background:var(--pale);color:var(--green2);padding:4px 9px;font-size:.77rem;font-weight:750;margin:5px 5px 0 0}.tag.no{background:var(--red);color:var(--red-ink)}
-.date{font-size:.84rem;color:var(--muted)}.warning{background:var(--amber);border:1px solid var(--line);padding:12px 14px;border-radius:13px;margin:14px 0;color:var(--amber-ink)}.danger{background:var(--red);color:var(--red-ink)}
-.shelter{cursor:pointer;transition:.15s}.shelter:hover{border-color:var(--green);transform:translateY(-1px)}
-.hidden{display:none!important}.back{margin-bottom:12px}.bigdate{font-weight:800}.footer{font-size:.82rem;color:var(--muted);text-align:center;margin-top:25px}
-#map{height:340px;border-radius:13px;border:1px solid var(--line);z-index:1}.mapnote{margin-top:9px}
+input[type=search],input[type=text]{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;margin:7px 0;background:var(--card);color:var(--ink)}
+.searchgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tag{display:inline-block;border-radius:20px;background:var(--pale);color:var(--green2);padding:5px 10px;font-size:.77rem;font-weight:750;margin:7px 6px 0 0}.tag.no{background:var(--red);color:var(--red-ink)}
+.date{font-size:.84rem;color:var(--muted)}.warning{background:var(--amber);border:1px solid var(--line);padding:13px 15px;border-radius:14px;margin:15px 0;color:var(--amber-ink)}.danger{background:var(--red);color:var(--red-ink)}
+.shelter{cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s;margin:0;min-width:0;padding:20px}.shelter:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 14px 30px #45365d20}
+.hidden{display:none!important}.back{margin-bottom:12px}.bigdate{font-weight:800}.footer{font-size:.82rem;color:var(--muted);text-align:center;margin-top:28px}
+#map{height:340px;border-radius:15px;border:1px solid var(--line);z-index:1;overflow:hidden}.mapnote{margin-top:10px}
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.toolbar select{padding:9px 11px}
-.accessgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.accessitem{background:var(--bg);border:1px solid var(--line);padding:9px 10px;border-radius:10px;font-size:.9rem}
-@media(max-width:560px){.searchgrid,.accessgrid{grid-template-columns:1fr}#map{height:290px}}
-@media(min-width:700px){.grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}.grid .shelter{margin:8px 0}}
+.accessgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.accessitem{background:var(--bg);border:1px solid var(--line);padding:13px 14px;border-radius:13px;font-size:.9rem;min-width:0}
+@media(max-width:560px){.searchgrid,.accessgrid{grid-template-columns:1fr}#map{height:290px}main{padding-left:14px;padding-right:14px}.panel{padding:17px}}
+@media(min-width:700px){.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px;row-gap:16px;align-items:stretch}.grid .shelter{margin:0}}
 </style>
 </head>
 <body>
-<header><div class="brand">⛑ SafeHarbor</div><p>Emergency shelter information, saved before you need it.</p></header>
+<header><div class="brand"><span class="brandmark" aria-hidden="true">S</span> SafeOff</div><p>Emergency shelter information, saved before you need it.</p></header>
 <main>
 <div class="topbar"><div class="status"><span class="dot"></span><span id="savedLabel">Viewing sample directory · Not yet saved to this device</span></div><div class="toolbar"><label class="muted" for="themeSelect">Appearance</label><select id="themeSelect" aria-label="Color theme"><option value="light">Light mode</option><option value="dark">Dark mode</option><option value="system">Use device setting</option></select></div></div>
 <div class="warning"><strong>Prototype notice:</strong> This is a fictional classroom directory. Listings, accessibility details and mapped locations are sample data, not verified emergency resources. Always confirm shelter availability and instructions with local emergency officials. A saved listing does not mean a shelter is open.</div>
@@ -67,11 +66,11 @@ input[type=search],input[type=text]{width:100%;padding:12px 13px;border:1px soli
 <div id="shelterList" class="grid"></div>
 </section>
 <section id="detailView" class="panel hidden"><button class="secondary back" id="backBtn">← Back to directory</button><div id="detailContent"></div></section>
-<div class="footer">SafeHarbor prototype · Directory v1.1.0 · Sample community · Always check official emergency guidance.</div>
+<div class="footer">SafeOff prototype · Directory v1.1.0 · Sample community · Always check official emergency guidance.</div>
 </main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
-const APP_VERSION="1.1.0", DIRECTORY_VERSION="1.1.0", STALE_DAYS=30;
+const APP_VERSION="1.2.0", DIRECTORY_VERSION="1.1.0", STALE_DAYS=30;
 const SAMPLE=[
 {id:"s1",name:"Corvallis Community Center",address:"2601 NW Tyler Ave, Corvallis, OR 97330",zip:"97330",neighborhood:"",wheelchair:true,stepFree:true,accessibleRestroom:true,accessibleParking:null,serviceAnimals:null,communicationSupport:null,notes:"Step-free entrance; accessible restroom listed in this fictional sample.",updated:"2026-11-10"},
 {id:"s2",name:"Riverside Emergency Shelter",address:"1450 Riverbend Rd, Corvallis, OR 97333",zip:"97333",neighborhood:"",wheelchair:true,stepFree:true,accessibleRestroom:null,accessibleParking:true,serviceAnimals:null,communicationSupport:null,notes:"Wheelchair-accessible entrance and designated accessible spaces in this fictional sample.",updated:"2026-11-12"},
@@ -93,7 +92,7 @@ function showDetail(id){const s=directory.find(x=>x.id===id);if(!s)return;$("lis
 $("backBtn").onclick=()=>{$("detailView").classList.add("hidden");$("listView").classList.remove("hidden");};
 $("downloadBtn").onclick=()=>{downloadedAt=new Date().toISOString();savedDirectoryVersion=DIRECTORY_VERSION;try{localStorage.setItem(KEY,JSON.stringify({items:directory,downloadedAt,directoryVersion:DIRECTORY_VERSION}));$("downloadStatus").textContent="Saved on this device.";updateStatus();}catch(e){$("downloadStatus").textContent="Could not save. Check device storage settings.";downloadedAt=null;}};
 ["search","neighborhoodSearch"].forEach(id=>$(id).addEventListener("input",render));$("accessibleOnly").addEventListener("change",render);$("sortSelect").addEventListener("change",render);
-function setTheme(value){const actual=value==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):value;document.documentElement.dataset.theme=actual;document.querySelector('meta[name="theme-color"]').content=actual==="dark"?"#111c1a":"#163d39";$("themeSelect").value=value;try{localStorage.setItem(THEME_KEY,value)}catch(e){}}
+function setTheme(value){const actual=value==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):value;document.documentElement.dataset.theme=actual;document.querySelector('meta[name="theme-color"]').content=actual==="dark"?"#211c2d":"#d4d2eb";$("themeSelect").value=value;try{localStorage.setItem(THEME_KEY,value)}catch(e){}}
 $("themeSelect").addEventListener("change",e=>setTheme(e.target.value));let savedTheme="system";try{savedTheme=localStorage.getItem(THEME_KEY)||"system"}catch(e){}setTheme(savedTheme);
 function initMap(){if(!window.L){$("mapCount").textContent="Map library unavailable";$("mapNote").textContent="The interactive map needs an internet connection. Use the address links in each shelter detail.";return;}map=L.map("map").setView([44.5646,-123.2620],12);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);plotMarkers();}
 async function plotMarkers(){if(!map)return;let placed=0;for(const s of directory){try{if(placed>0)await new Promise(resolve=>setTimeout(resolve,1100));const q=encodeURIComponent(s.address);const response=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+q,{headers:{"Accept":"application/json"}});if(!response.ok)continue;const results=await response.json();if(!results.length)continue;const p=results[0],marker=L.marker([Number(p.lat),Number(p.lon)]).addTo(map).bindPopup("<strong>"+esc(s.name)+"</strong><br>"+esc(s.address)+"<br><small>Sample listing — verify before use</small>");markers[s.id]=marker;placed++;}catch(e){}}$("mapCount").textContent=placed+" of "+directory.length+" mapped";if(placed){const group=L.featureGroup(Object.values(markers));map.fitBounds(group.getBounds().pad(.18));$("mapNote").textContent="Pins are based on online address lookup and may be inaccurate because this is fictional sample data. Map requires internet access.";}else{$("mapNote").textContent="Could not look up addresses. Check your connection or use the address links in shelter details.";}}

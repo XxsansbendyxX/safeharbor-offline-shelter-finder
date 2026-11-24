@@ -1,12 +1,12 @@
 {
-  "name": "SafeHarbor | Offline Emergency Shelter Finder",
-  "short_name": "SafeHarbor",
+  "name": "SafeOff | Offline Emergency Shelter Finder",
+  "short_name": "SafeOff",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f3f6f4",
-  "theme_color": "#163d39",
+  "background_color": "#d4d2eb",
+  "theme_color": "#d4d2eb",
   "description": "Installable emergency shelter directory prototype with accessibility filters and offline saved listings.",
   "icons": [
     {
